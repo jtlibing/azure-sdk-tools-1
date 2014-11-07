@@ -793,7 +793,7 @@ Please follow these steps in the portal:
     <value>http://api.datamarket.azure.com/CatalogService.svc</value>
   </data>
   <data name="MaxSupportAzureSdkVersion" xml:space="preserve">
-    <value>v2.4</value>
+    <value>v2.5</value>
   </data>
   <data name="MemcacheEndpointName" xml:space="preserve">
     <value>memcache_default</value>
@@ -802,7 +802,7 @@ Please follow these steps in the portal:
     <value>11211</value>
   </data>
   <data name="MinSupportAzureSdkVersion" xml:space="preserve">
-    <value>v2.4</value>
+    <value>v2.5</value>
   </data>
   <data name="MissingPythonPreReq" xml:space="preserve">
     <value>Python 2.7 is not installed.  Please install it as well as Django 1.4.</value>

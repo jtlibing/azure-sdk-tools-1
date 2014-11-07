@@ -48,7 +48,6 @@ namespace Microsoft.Azure.Commands.DataFactories
         [ValidateSet(
             SetSliceStatusType.Individual,
             SetSliceStatusType.UpstreamInPipeline,
-            SetSliceStatusType.UpstreamInFactory,
             IgnoreCase = false)]
         public string UpdateType
         {

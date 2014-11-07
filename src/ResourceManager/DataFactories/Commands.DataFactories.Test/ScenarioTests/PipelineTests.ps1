@@ -37,23 +37,26 @@ function Test-Pipeline
 
         New-AzureDataFactoryTable -ResourceGroupName $rgname -DataFactoryName $dfname -Name inputTable -File .\Resources\table.json -Force
         New-AzureDataFactoryTable -ResourceGroupName $rgname -DataFactoryName $dfname -Name outputTable -File .\Resources\table.json -Force
-                
-        #create pipeline
-        $pipelineName = "samplePipeline"
-        $actualPipeline = New-AzureDataFactoryPipeline  -ResourceGroupName $rgname -Name $pipelineName -DataFactoryName $dfname -File ".\Resources\pipeline.json" -Force
+        
+        $pipelineName = "samplePipeline"        
+        #create pipeline will return a failed provisioning state because we are not really feed the json with valid credentials.
+        #we can still continue the test with a Get operation though.
+        Assert-Throws { New-AzureDataFactoryPipeline  -ResourceGroupName $rgname -Name $pipelineName -DataFactoryName $dfname -File ".\Resources\pipeline.json" -Force }
         $expectedPipeline = Get-AzureDataFactoryPipeline -ResourceGroupName $rgname -Name $pipelineName -DataFactoryName $dfname
 
-        Assert-AreEqual $actualPipeline.ResourceGroupName $expectedPipeline.ResourceGroupName
-        Assert-AreEqual $actualPipeline.DataFactoryName $expectedPipeline.DataFactoryName
-	    Assert-AreEqual $actualPipeline.PipelineName $expectedPipeline.PipelineName
+        Assert-AreEqual $rgname $expectedPipeline.ResourceGroupName
+        Assert-AreEqual $dfname $expectedPipeline.DataFactoryName
+	    Assert-AreEqual $pipelineName $expectedPipeline.PipelineName
+        Assert-AreEqual "Failed" $expectedPipeline.ProvisioningState
                 
-        #overwrite the pipeline again with -DataFactory parameter
-        $actualPipeline = New-AzureDataFactoryPipeline -DataFactory $df -File ".\Resources\pipeline.json" -Force
-        $expectedPipeline = Get-AzureDataFactoryPipeline -DataFactory $df -Name $actualPipeline.PipelineName
+        #overwrite the pipeline again with -DataFactory parameter (provisioning will still fail as we are not using valid credentials)
+        Assert-Throws { New-AzureDataFactoryPipeline -DataFactory $df -File ".\Resources\pipeline.json" -Force }
+        $expectedPipeline = Get-AzureDataFactoryPipeline -DataFactory $df -Name $pipelineName
 
-        Assert-AreEqual $actualPipeline.ResourceGroupName $expectedPipeline.ResourceGroupName
-        Assert-AreEqual $actualPipeline.DataFactoryName $expectedPipeline.DataFactoryName
-	    Assert-AreEqual $actualPipeline.PipelineName $expectedPipeline.PipelineName
+        Assert-AreEqual $rgname $expectedPipeline.ResourceGroupName
+        Assert-AreEqual $dfname $expectedPipeline.DataFactoryName
+	    Assert-AreEqual $pipelineName $expectedPipeline.PipelineName
+        Assert-AreEqual "Failed" $expectedPipeline.ProvisioningState
 
         #remove the pipeline through piping
         Get-AzureDataFactoryPipeline -DataFactory $df -Name $pipelineName | Remove-AzureDataFactoryPipeline -Force

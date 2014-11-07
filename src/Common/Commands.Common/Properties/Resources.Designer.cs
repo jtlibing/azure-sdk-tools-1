@@ -1858,7 +1858,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://az413943.vo.msecnd.net/node/runtimemanifest_0.7.4.1.xml.
+        ///   Looks up a localized string similar to http://az413943.vo.msecnd.net/node/runtimemanifest_0.7.5.2.xml.
         /// </summary>
         public static string ManifestUri {
             get {
@@ -1867,7 +1867,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to v2.4.
+        ///   Looks up a localized string similar to v2.5.
         /// </summary>
         public static string MaxSupportAzureSdkVersion {
             get {
@@ -1894,7 +1894,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to v2.4.
+        ///   Looks up a localized string similar to v2.5.
         /// </summary>
         public static string MinSupportAzureSdkVersion {
             get {
