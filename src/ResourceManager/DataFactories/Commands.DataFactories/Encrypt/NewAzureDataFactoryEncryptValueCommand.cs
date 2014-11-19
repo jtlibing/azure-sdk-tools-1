@@ -43,6 +43,14 @@ namespace Microsoft.Azure.Commands.DataFactories
         [Parameter(ParameterSetName = ByFactoryName, Position = 3, Mandatory = false, HelpMessage = "The gateway group name.")]
         public string GatewayName { get; set; }
 
+        [Parameter(ParameterSetName = ByFactoryObject, Position = 3, Mandatory = false, HelpMessage = "The windows authentication user name.")]
+        [Parameter(ParameterSetName = ByFactoryName, Position = 4, Mandatory = false, HelpMessage = "The windows authentication user name.")]
+        public string UserName { get; set; }
+
+        [Parameter(ParameterSetName = ByFactoryObject, Position = 4, Mandatory = false, HelpMessage = "The windows authentication password.")]
+        [Parameter(ParameterSetName = ByFactoryName, Position = 5, Mandatory = false, HelpMessage = "The windows authentication password.")]
+        public SecureString Password { get; set; }
+
         [EnvironmentPermission(SecurityAction.Demand, Unrestricted = true)]
         public override void ExecuteCmdlet()
         {
@@ -68,7 +76,7 @@ namespace Microsoft.Azure.Commands.DataFactories
             else
             {
                 // On-premises encryption with Gateway
-                encryptedValue = DataFactoryClient.OnPremisesEncryptString(Value, ResourceGroupName, DataFactoryName, GatewayName);
+                encryptedValue = DataFactoryClient.OnPremisesEncryptString(Value, ResourceGroupName, DataFactoryName, GatewayName, UserName, Password);
             }
             
             WriteObject(encryptedValue);

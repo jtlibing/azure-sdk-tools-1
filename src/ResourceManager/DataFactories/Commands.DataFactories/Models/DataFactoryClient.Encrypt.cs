@@ -32,7 +32,7 @@ namespace Microsoft.Azure.Commands.DataFactories
                 resourceGroupName, dataFactoryName);
         }
 
-        public virtual string OnPremisesEncryptString(SecureString value, string resourceGroupName, string dataFactoryName, string gatewayName)
+        public virtual string OnPremisesEncryptString(SecureString value, string resourceGroupName, string dataFactoryName, string gatewayName, string userName, SecureString password)
         {
             if (value == null)
             {
@@ -46,12 +46,14 @@ namespace Microsoft.Azure.Commands.DataFactories
                         {
                             ServiceToken = response.ConnectionInfo.ServiceToken,
                             IdentityCertThumbprint = response.ConnectionInfo.IdentityCertThumbprint,
-                            HostServiceUri = response.ConnectionInfo.HostServiceUri
+                            HostServiceUri = response.ConnectionInfo.HostServiceUri,
+                            InstanceVersionString = response.ConnectionInfo.Version 
                         }
                 };
 
+            UserInputConnectionString connectionString = new UserInputConnectionString(value, userName, password);
             var gatewayEncryptionClient = new GatewayEncryptionClient();
-            return gatewayEncryptionClient.Encrypt(value, gatewayEncryptionInfos);
+            return gatewayEncryptionClient.Encrypt(connectionString, gatewayEncryptionInfos);
         }
     }
 }

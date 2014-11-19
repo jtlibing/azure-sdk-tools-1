@@ -31,7 +31,7 @@ namespace Microsoft.WindowsAzure.Commands.Test.DataFactory
 
         [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
-        public void TestOnPermDatasourceEncryptionWithRawJsonContent()
+        public void TestOnPremDatasourceEncryptionSQLAuth()
         {
             SecureString secureString = new SecureString();
             string expectedOutput = "My encrypted string " + Guid.NewGuid();
@@ -47,13 +47,45 @@ namespace Microsoft.WindowsAzure.Commands.Test.DataFactory
             };
 
             // Arrange
-            this.dataFactoriesClientMock.Setup(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName)).Returns(expectedOutput);
+            this.dataFactoriesClientMock.Setup(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName, null, null)).Returns(expectedOutput);
 
             // Action
             cmdlet.ExecuteCmdlet();
 
             // Assert
-            this.dataFactoriesClientMock.Verify(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName), Times.Once());
+            this.dataFactoriesClientMock.Verify(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName, null, null), Times.Once());
+            this.commandRuntimeMock.Verify(f => f.WriteObject(expectedOutput), Times.Once());
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestOnPremDatasourceEncryptionWinAuth()
+        {
+            SecureString secureString = new SecureString();
+            string expectedOutput = "My encrypted string " + Guid.NewGuid();
+            string WinAuthUserName = "foo";
+            SecureString winAuthPassword = new SecureString();
+
+            var cmdlet = new NewAzureDataFactoryEncryptValueCommand
+            {
+                CommandRuntime = this.commandRuntimeMock.Object,
+                DataFactoryClient = this.dataFactoriesClientMock.Object,
+                Value = secureString,
+                ResourceGroupName = ResourceGroupName,
+                DataFactoryName = DataFactoryName,
+                GatewayName = GatewayName,
+                UserName = WinAuthUserName,
+                Password = winAuthPassword
+            };
+
+            // Arrange
+            this.dataFactoriesClientMock.Setup(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName, WinAuthUserName, winAuthPassword)).Returns(expectedOutput);
+
+            // Action
+            cmdlet.ExecuteCmdlet();
+
+            // Assert
+            this.dataFactoriesClientMock.Verify(f => f.OnPremisesEncryptString(secureString, ResourceGroupName, DataFactoryName, GatewayName, WinAuthUserName, winAuthPassword), Times.Once());
             this.commandRuntimeMock.Verify(f => f.WriteObject(expectedOutput), Times.Once());
         }
     }
